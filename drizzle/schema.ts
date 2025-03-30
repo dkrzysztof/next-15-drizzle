@@ -1,8 +1,6 @@
 import { pgTable, unique, check, serial, varchar, timestamp, foreignKey, primaryKey, integer } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
-
-
 export const users = pgTable("users", {
 	id: serial().primaryKey().notNull(),
 	firstName: varchar("first_name", { length: 60 }),
@@ -20,14 +18,14 @@ export const users = pgTable("users", {
 export const usersAddresses = pgTable("users_addresses", {
 	userId: integer("user_id").notNull(),
 	addressType: varchar("address_type", { length: 7 }).notNull(),
-	validFrom: timestamp("valid_from", { mode: 'string' }).notNull(),
+	validFrom: timestamp("valid_from", { mode: 'date' }).notNull(),
 	postCode: varchar("post_code", { length: 6 }).notNull(),
 	city: varchar({ length: 60 }).notNull(),
 	countryCode: varchar("country_code", { length: 3 }).notNull(),
 	street: varchar({ length: 100 }).notNull(),
 	buildingNumber: varchar("building_number", { length: 60 }).notNull(),
-	createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
-	updatedAt: timestamp("updated_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
+	createdAt: timestamp("created_at", { mode: 'date' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
+	updatedAt: timestamp("updated_at", { mode: 'date' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
 }, (table) => [
 	foreignKey({
 			columns: [table.userId],

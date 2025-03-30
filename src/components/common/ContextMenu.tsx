@@ -1,40 +1,81 @@
-"use client";
+import { Dropdown, MenuProps } from "antd";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useState
+} from "react";
 
-import React, { useState } from "react";
-import { Dropdown, MenuProps, message } from "antd";
-import { SelectUser } from "@/db/schema";
-
-type Props = {
-  user: SelectUser | null;
-  open: boolean;
-  pos: {
-    x: number;
-    y: number;
-  };
+export type ContextMenuValue<T = any> = {
+  openContextMenu: (
+    event: Pick<MouseEvent, "preventDefault" | "clientX" | "clientY">,
+    data: T | null
+  ) => void;
+  data: T | null;
 };
 
-export const ContextMenu = ({ user, open, pos }: Props) => {
-  const menuItems: MenuProps["items"] = [
-    {
-      key: "edit",
-      label: "Edit",
-      onClick: () => message.info("Edited!"),
+const ContextMenuContext = createContext<ContextMenuValue<any>>({
+  openContextMenu: () => {},
+  data: null,
+});
+
+export const useContextMenu = () => {
+  return useContext(ContextMenuContext);
+};
+
+type Props = {
+  items: MenuProps["items"];
+};
+
+export const ContextMenuProvider: React.FC<
+  React.PropsWithChildren<Props>
+> = ({ items, children }) => {
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState<any | null>(null);
+
+  const [mousePosition, setMousePosition] = useState({
+    x: 0,
+    y: 0,
+  });
+
+  const openContextMenu = useCallback(
+    (
+      event: Pick<MouseEvent, "preventDefault" | "clientX" | "clientY">,
+      data: any
+    ) => {
+      event.preventDefault();
+      if (!open) {
+        document.addEventListener(`click`, function onClickOutside() {
+          setData(null);
+          setOpen(false);
+          document.removeEventListener(`click`, onClickOutside);
+        });
+      }
+      setData(data);
+      setOpen(true);
+      setMousePosition({ x: event.clientX, y: event.clientY });
     },
-    {
-      key: "delete",
-      label: "Delete",
-      onClick: () => message.info("Deleted!"),
-      danger: true,
-    },
-  ];
+    [open, setOpen, setMousePosition]
+  );
 
   return (
-    <Dropdown
-      menu={{ items: menuItems }}
-      open={open}
-      overlayStyle={{ left: `${pos.x}px`, top: `${pos.y}px` }}
+    <ContextMenuContext.Provider
+      value={{
+        data,
+        openContextMenu,
+      }}
     >
-      <div className="absolute" />
-    </Dropdown>
+      <Dropdown
+        menu={{ items: items }}
+        open={open}
+        overlayStyle={{
+          left: `${mousePosition.x}px`,
+          top: `${mousePosition.y}px`,
+        }}
+      >
+        <div className="absolute" />
+      </Dropdown>
+      {children}
+    </ContextMenuContext.Provider>
   );
 };

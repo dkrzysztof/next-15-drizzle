@@ -5,6 +5,10 @@ export type Pagination = {
   pageSize: number;
 }
 
+export type PaginationResponse = Pagination & {
+  total: number
+}
+
 export type UserAddress = SelectUserAddress & {
   createdAt: string;
   updatedAt: string;
@@ -16,4 +20,14 @@ export type UserAddress = SelectUserAddress & {
   countryCode: string;
   street: string;
   buildingNumber: string;
+}
+
+export type ServerActionResult = {
+  // TODO: remove the values which are not used, after project is finished
+  type: "warning" | "success" | "error",
+  message: string;
+}
+
+export type Paginated<T> = PaginationResponse & {
+  data: T[]
 }
