@@ -57,4 +57,3 @@ export type InsertUserAddressDateless = Omit<
 >;
 export type UserAddressGroupedPrimaryKey = Pick<SelectUserAddress, "userId" | "addressType" | "validFrom">;
 export type SelectUserAddress = typeof usersAddressesTable.$inferSelect;
-export type UserAddressAddressType = "HOME" | "INVOICE" | "POST" | "WORK";

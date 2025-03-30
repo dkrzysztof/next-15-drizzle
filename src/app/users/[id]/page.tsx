@@ -5,7 +5,7 @@ import { formatFullname, paginationOrDefault, shouldBeNumber } from "@/utils";
 import { CreateUserAddreesButtonWithTheme } from "./CreateUserAddreesButton";
 import { UsersAddressesTableWithTheme } from "./UsersAddressesTable";
 import { Suspense } from "react";
-import { Skeleton } from "antd";
+import { Col, Row, Skeleton } from "antd";
 
 type PageParams = {
   searchParams: {
@@ -22,12 +22,12 @@ export default async function UsersAddresses({
   params,
 }: PageParams) {
   const param = await params;
-  const paginationParams = paginationOrDefault(await searchParams);
   const userId = shouldBeNumber(param.id);
+  const paginationRequest = paginationOrDefault(await searchParams);
 
   const user = await getUserById(userId);
-  const { data: usersAddresses, ...pagination } =
-    await getUsersAddressesByUserId(userId, paginationParams);
+  const { data: usersAddresses, ...paginationResponse } =
+    await getUsersAddressesByUserId(userId, paginationRequest);
 
   return (
     <>
@@ -35,14 +35,23 @@ export default async function UsersAddresses({
         title={formatFullname(user)}
         name="List of user's addresses"
       />
-      <CreateUserAddreesButtonWithTheme userId={userId} />
+      <Row className="mb-3 w-full">
+        <Col className="ml-auto">
+          <CreateUserAddreesButtonWithTheme userId={userId} />
+        </Col>
+      </Row>
       <Suspense
-        key={`user-addresses-${paginationParams.page}-${paginationParams.pageSize}`}
+        key={
+          "users-addresses" +
+          paginationResponse.page +
+          "-" +
+          paginationResponse.pageSize
+        }
         fallback={<Skeleton />}
       >
         <UsersAddressesTableWithTheme
           dataSource={usersAddresses}
-          pagination={pagination}
+          pagination={paginationResponse}
         />
       </Suspense>
     </>

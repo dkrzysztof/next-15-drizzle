@@ -17,8 +17,8 @@ export const users = pgTable("users", {
 
 export const usersAddresses = pgTable("users_addresses", {
 	userId: integer("user_id").notNull(),
-	addressType: varchar("address_type", { length: 7 }).notNull(),
-	validFrom: timestamp("valid_from", { mode: 'date' }).notNull(),
+	addressType: varchar("address_type", { length: 7 }).notNull().$type<UserAddressAddressType>(),
+	validFrom: timestamp("valid_from", { mode: 'string' }).notNull(),
 	postCode: varchar("post_code", { length: 6 }).notNull(),
 	city: varchar({ length: 60 }).notNull(),
 	countryCode: varchar("country_code", { length: 3 }).notNull(),
@@ -35,3 +35,5 @@ export const usersAddresses = pgTable("users_addresses", {
 	primaryKey({ columns: [table.userId, table.addressType, table.validFrom], name: "users_addresses_pkey"}),
 	check("users_addresses_address_type_check", sql`(address_type)::text = ANY ((ARRAY['HOME'::character varying, 'INVOICE'::character varying, 'POST'::character varying, 'WORK'::character varying])::text[])`),
 ]);
+
+export type UserAddressAddressType = "HOME" | "INVOICE" | "POST" | "WORK";

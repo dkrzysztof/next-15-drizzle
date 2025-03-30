@@ -2,21 +2,18 @@ import { db } from "@/db";
 import {
   SelectUser,
   SelectUserAddress,
-  UserAddressAddressType,
   UserAddressGroupedPrimaryKey,
 } from "@/db/schema";
 import { USERS_ADDRESS_SELECT_OBJECT } from "@/db/select";
-import { and, eq, count } from "drizzle-orm";
-import { notFound } from "next/navigation";
-import { usersAddresses } from "../../drizzle/schema";
-import { Paginated, Pagination, ServerActionResult } from "./types";
-import { getUserById } from "./users";
 import { firstOrNull } from "@/utils";
+import { and, count, eq } from "drizzle-orm";
+import { UserAddressAddressType, usersAddresses } from "../../drizzle/schema";
+import { Paginated, Pagination, ServerActionResult } from "./types";
 
 export type AddUserAddressType = {
   userId: SelectUser["id"];
   addressType: UserAddressAddressType;
-  validFrom: Date;
+  validFrom: string;
   postCode: string;
   city: string;
   countryCode: string;
@@ -26,13 +23,7 @@ export type AddUserAddressType = {
 
 export const addUserAddressToUser = async (
   data: AddUserAddressType
-): Promise<void> => {
-  const user = getUserById(data.userId);
-
-  if (!user) {
-    notFound();
-  }
-
+): Promise<ServerActionResult> => {
   const userAddress = await getUserAddressByGroupedId({
     addressType: data.addressType,
     userId: data.userId,
@@ -40,12 +31,18 @@ export const addUserAddressToUser = async (
   });
 
   if (userAddress) {
-    throw new Error(
-      "User address with given address type and valid from date already exist!"
-    );
+    return {
+      type: "error",
+      message:
+        "User address with given address type and valid from date already exist!",
+    };
   }
 
   await db.insert(usersAddresses).values(data);
+  return {
+    type: "success",
+    message: "New address was added!",
+  };
 };
 
 export const getUserAddressByGroupedId = async ({
@@ -65,6 +62,42 @@ export const getUserAddressByGroupedId = async ({
     )
     .limit(1)
     .then(firstOrNull);
+};
+
+export const editUserAddressToUser = async ({
+  userId,
+  addressType,
+  validFrom,
+  ...data
+}: AddUserAddressType): Promise<ServerActionResult> => {
+  const userAddress = await getUserAddressByGroupedId({
+    addressType,
+    userId,
+    validFrom,
+  });
+
+  if (!userAddress) {
+    return {
+      type: "error",
+      message: `User's address was not found`,
+    };
+  }
+
+  await db
+    .update(usersAddresses)
+    .set(data)
+    .where(
+      and(
+        eq(usersAddresses.userId, userId),
+        eq(usersAddresses.addressType, addressType),
+        eq(usersAddresses.validFrom, validFrom)
+      )
+    );
+
+  return {
+    type: "success",
+    message: `Successfuly updated user's address`,
+  };
 };
 
 export const getUsersAddressesByUserId = async (
@@ -98,5 +131,39 @@ export const getUsersAddressesByUserId = async (
     total,
     page,
     pageSize,
+  };
+};
+
+export const removeUserAddress = async ({
+  userId,
+  addressType,
+  validFrom,
+}: UserAddressGroupedPrimaryKey): Promise<ServerActionResult> => {
+  const userAddress = await getUserAddressByGroupedId({
+    addressType,
+    userId,
+    validFrom,
+  });
+
+  if (!userAddress) {
+    return {
+      type: "error",
+      message: `User's address was not found`,
+    };
+  }
+
+  await db
+    .delete(usersAddresses)
+    .where(
+      and(
+        eq(usersAddresses.userId, userId),
+        eq(usersAddresses.addressType, addressType),
+        eq(usersAddresses.validFrom, validFrom)
+      )
+    );
+
+  return {
+    type: "success",
+    message: `Successfuly removed user's address`,
   };
 };

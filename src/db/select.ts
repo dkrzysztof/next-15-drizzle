@@ -1,6 +1,5 @@
 import { sql } from "drizzle-orm";
-import { usersAddresses } from "../../drizzle/schema";
-import { UserAddressAddressType } from "./schema";
+import { UserAddressAddressType, usersAddresses } from "../../drizzle/schema";
 
 export const USERS_ADDRESS_SELECT_OBJECT = {
   userId: usersAddresses.userId,
@@ -12,5 +11,5 @@ export const USERS_ADDRESS_SELECT_OBJECT = {
   buildingNumber: usersAddresses.buildingNumber,
   createdAt: usersAddresses.createdAt,
   updatedAt: usersAddresses.updatedAt,
-  validFrom: usersAddresses.validFrom
+  validFrom: usersAddresses.validFrom,
 };

@@ -1,18 +1,28 @@
 "use client";
-import { SelectUser, UserAddressAddressType } from "@/db/schema";
-import { Button, DatePicker, Form, FormInstance, Input, Row, Select } from "antd";
-import React, { startTransition } from "react";
-import { LiveFormattedAddress } from "../user-addresses/LiveFormattedAddress";
-import { AddressTypeTag } from "./AddressTypeTag";
-import dayjs, { Dayjs } from "dayjs";
+import { SelectUser } from "@/db/schema";
+import {
+  Button,
+  DatePicker,
+  Form,
+  FormInstance,
+  Input,
+  Row,
+  Select,
+} from "antd";
+import dayjs from "dayjs";
 import countries from "i18n-iso-countries";
+import React, { startTransition } from "react";
+import { AddressTypeTag } from "../users/AddressTypeTag";
+import { LiveFormUsersAddressPreview } from "./LiveFormUsersAddressPreview";
+import { UserAddressAddressType } from "../../../drizzle/schema";
 
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
 
-type UserAddressFormValues = {
+export type UserAddressFormValues = {
   userId?: SelectUser["id"];
   addressType?: UserAddressAddressType;
-  validFrom?: dayjs.Dayjs;
+  validFrom?: string;
+  validFromPreview?: dayjs.Dayjs;
   street?: string;
   buildingNumber?: string;
   postCode?: string;
@@ -22,29 +32,31 @@ type UserAddressFormValues = {
 
 export type UserAddressExportedFormValues = Omit<
   UserAddressFormValues,
-  "validFrom"
+  "validFrom" | "validFromPreview"
 > & {
   validFrom?: string;
 };
 
-const userAddressFormValuesToUserAddressExportedFormValues = (
-  value: Required<UserAddressFormValues>
-): Required<UserAddressExportedFormValues> => ({
+const userAddressFormValuesToUserAddressExportedFormValues = ({
+  validFromPreview,
+  ...value
+}: Required<UserAddressFormValues>): Required<UserAddressExportedFormValues> => ({
   ...value,
-  validFrom: value.validFrom?.toISOString(),
+  validFrom: value.validFrom ?? validFromPreview.format("YYYY-MM-DDTHH:mm:ss.SSSSSS"),
 });
 
 type Props = {
-  userId: SelectUser["id"];
-  // TODO: is it needed ?
-  form: FormInstance;
-  action: (value: Required<UserAddressExportedFormValues> | null) => void;
+  formType: "edit" | "create";
   loading?: boolean;
-  initialValues?: UserAddressExportedFormValues;
+  userId: SelectUser["id"];
+  form: FormInstance;
+  initialValues?: UserAddressFormValues;
+  action: (value: Required<UserAddressExportedFormValues>) => void;
   onCancel: () => void;
 };
 
 export const UserAddressForm: React.FC<Props> = ({
+  formType,
   userId,
   initialValues,
   form,
@@ -56,7 +68,6 @@ export const UserAddressForm: React.FC<Props> = ({
     <Form
       form={form}
       onFinish={(values: Required<UserAddressFormValues>) => {
-        console.log(values.validFrom)
         const serializedValues =
           userAddressFormValuesToUserAddressExportedFormValues(values);
         startTransition(() => action(serializedValues));
@@ -66,14 +77,6 @@ export const UserAddressForm: React.FC<Props> = ({
       initialValues={{
         ...initialValues,
         userId,
-        // TODO: remove - only for faster development,
-        addressType: "HOME",
-        validFrom: dayjs(),
-        street: "Buforowa",
-        buildingNumber: "20",
-        postCode: "52-131",
-        countryCode: "PL",
-        city: "Wrocław",
       }}
     >
       <div className="flex gap-4">
@@ -85,7 +88,6 @@ export const UserAddressForm: React.FC<Props> = ({
           name="street"
           rules={[{ max: 100 }, { required: true }]}
           className="flex-1"
-          initialValue="blabla"
         >
           <Input placeholder="Enter street name" />
         </Form.Item>
@@ -122,6 +124,7 @@ export const UserAddressForm: React.FC<Props> = ({
             { max: 3 },
             { required: true },
             {
+              // TODO: move to separate file?
               validator: (_: any, value: string) => {
                 if (!value || countries.isValid(value.toUpperCase())) {
                   return Promise.resolve();
@@ -144,7 +147,10 @@ export const UserAddressForm: React.FC<Props> = ({
           rules={[{ max: 7 }, { required: true }]}
           className="w-1/2"
         >
-          <Select placeholder="Select address type">
+          <Select
+            placeholder="Select address type"
+            disabled={formType === "edit"}
+          >
             <Select.Option value="HOME">
               <AddressTypeTag type="HOME" />
             </Select.Option>
@@ -159,13 +165,19 @@ export const UserAddressForm: React.FC<Props> = ({
             </Select.Option>
           </Select>
         </Form.Item>
-
-        <Form.Item label="Valid From" name="validFrom" className="w-1/2">
-          <DatePicker showTime className="w-full" />
+        <Form.Item hidden name="validFrom">
+          <Input hidden />
+        </Form.Item>
+        <Form.Item label="Valid From" name="validFromPreview" className="w-1/2">
+          <DatePicker
+            showTime
+            className="w-full"
+            disabled={formType === "edit"}
+          />
         </Form.Item>
       </div>
 
-      <LiveFormattedAddress form={form} />
+      <LiveFormUsersAddressPreview form={form} />
       <Row className="w-full justify-end gap-4">
         <Button onClick={onCancel}>Cancel</Button>
         <Button

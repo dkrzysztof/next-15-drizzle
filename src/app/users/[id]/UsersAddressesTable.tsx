@@ -1,12 +1,14 @@
 "use client";
 
+import { PaginationResponse } from "@/api/types";
 import { SelectUserAddress } from "@/db/schema";
-import { Table, TablePaginationConfig } from "antd";
-import { USERS_ADDRESSES_COLUMNS } from "./columns";
-import { userAddressPrimaryKeyToString } from "@/utils";
+import { usePagination } from "@/hooks/usePagination";
 import withTheme from "@/theme";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Pagination, PaginationResponse } from "@/api/types";
+import { userAddressPrimaryKeyToString } from "@/utils";
+import { Table } from "antd";
+import { USERS_ADDRESSES_COLUMNS } from "./columns";
+import { EditModalProvider } from "./context";
+import { EditUserAddressModal } from "./EditUserAddressModal";
 
 type Props = {
   dataSource: SelectUserAddress[];
@@ -14,33 +16,21 @@ type Props = {
 };
 
 const UsersAddressesTable = ({ dataSource, pagination }: Props) => {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const {push} = useRouter()
-
-  const handlePaginationChange = ({ pageSize, current,  }: TablePaginationConfig) => {
-    const params = new URLSearchParams(searchParams);
-    if(pageSize){
-      params.set('pageSize', pageSize.toString());
-    }
-    if(current){
-      params.set('page', current.toString());
-    }
-    push(`${pathname}?${params.toString()}`)
-  };
+  const { onPaginationChange, pagination: tablePagination } =
+    usePagination(pagination);
 
   return (
-    <Table
-      pagination={{
-        ...pagination,
-        current: pagination.page,
-      }}
-      className="w-full"
-      rowKey={userAddressPrimaryKeyToString}
-      onChange={handlePaginationChange}
-      columns={USERS_ADDRESSES_COLUMNS}
-      dataSource={dataSource}
-    />
+    <EditModalProvider>
+      <Table
+        pagination={tablePagination}
+        className="w-full"
+        rowKey={userAddressPrimaryKeyToString}
+        onChange={onPaginationChange}
+        columns={USERS_ADDRESSES_COLUMNS}
+        dataSource={dataSource}
+      />
+      <EditUserAddressModal />
+    </EditModalProvider>
   );
 };
 

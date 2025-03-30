@@ -1,20 +1,34 @@
 import { db } from "../db";
-import { Pagination } from "./types";
+import { Paginated, Pagination } from "./types";
 import { SelectUser, usersTable } from "../db/schema";
-import { asc, eq } from "drizzle-orm";
+import { asc, count, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { firstOrNull } from "@/utils";
 
 export const getAllUsers = async ({
   page,
   pageSize,
-}: Pagination): Promise<SelectUser[]> => {
-  return db
+}: Pagination): Promise<Paginated<SelectUser>> => {
+  const data = await db
     .select()
     .from(usersTable)
     .orderBy(asc(usersTable.id))
     .limit(pageSize)
     .offset((page - 1) * pageSize);
+
+  const { total } = (await db
+    .select({
+      total: count(),
+    })
+    .from(usersTable)
+    .then(firstOrNull)!) ?? { total: 0 };
+
+  return {
+    data,
+    total,
+    page,
+    pageSize,
+  };
 };
 
 export const getUserById = async (

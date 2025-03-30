@@ -1,8 +1,11 @@
 import { AddressTypeTag } from "@/components/users/AddressTypeTag";
-import { UserAddressAddressType } from "@/db/schema";
+import { SelectUserAddress } from "@/db/schema";
 import { formatTimestamp } from "@/utils";
+import { UsersAddressesContextMenu } from "./UsersAddressesContextMenu";
+import { TableColumnType } from "antd";
+import { UserAddressAddressType } from "../../../../drizzle/schema";
 
-export const USERS_ADDRESSES_COLUMNS = [
+export const USERS_ADDRESSES_COLUMNS: TableColumnType<SelectUserAddress>[] = [
   {
     title: "Address type",
     dataIndex: "addressType",
@@ -14,4 +17,12 @@ export const USERS_ADDRESSES_COLUMNS = [
   { title: "Post code", dataIndex: "postCode" },
   { title: "City", dataIndex: "city" },
   { title: "Country code", dataIndex: "countryCode" },
+  {
+    title: "Actions",
+    width: 30,
+    align: "right",
+    render: (usersAddress: SelectUserAddress) => (
+      <UsersAddressesContextMenu usersAddress={usersAddress} />
+    ),
+  },
 ];

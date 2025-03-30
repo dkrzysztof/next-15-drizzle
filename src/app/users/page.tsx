@@ -1,24 +1,45 @@
 import { getAllUsers } from "@/api/users";
-import { UsersTableWithTheme } from "../../components/users/Table";
 import { PageHeader } from "@/components/common/PageHeader";
+import { paginationOrDefault } from "@/utils";
+import { Row, Skeleton } from "antd";
+import { Suspense } from "react";
+import { AddUserButton } from "./AddUserButton";
+import { UsersTableWithTheme } from "./UsersTable";
 
 type SearchPageProps = {
   searchParams: {
-    page: number;
-    pageSize: number;
+    page: string;
+    pageSize: string;
   };
 };
 
 export default async function UsersPage({ searchParams }: SearchPageProps) {
-  const { page = 1, pageSize = 5 } = await searchParams;
-  const users = await getAllUsers({
-    page,
-    pageSize,
-  });
+  const paginationRequest = paginationOrDefault(await searchParams);
+
+  const { data: users, ...paginationResponse } = await getAllUsers(
+    paginationRequest
+  );
+
   return (
-    <>    
-      <PageHeader title="Users list" name="users in your database. Click on one to inspect user's addresses" />
-      <UsersTableWithTheme dataSource={users} />
+    <>
+      <PageHeader
+        title="Users list"
+        name="users in your database. Click on one to inspect user's addresses"
+      />
+      <Suspense
+        key={
+          "users" + paginationResponse.page + "-" + paginationResponse.pageSize
+        }
+        fallback={<Skeleton />}
+      >
+        <Row className="w-full mb-3">
+          <AddUserButton />
+        </Row>
+        <UsersTableWithTheme
+          dataSource={users}
+          pagination={paginationResponse}
+        />
+      </Suspense>
     </>
   );
 }

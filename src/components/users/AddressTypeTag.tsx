@@ -1,6 +1,6 @@
 "use client";
-import { UserAddressAddressType } from "@/db/schema";
 import { Tag, TagProps } from "antd";
+import { UserAddressAddressType } from "../../../drizzle/schema";
 
 const typeTagColor: Record<UserAddressAddressType, TagProps["color"]> = {
   HOME: "green",

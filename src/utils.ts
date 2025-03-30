@@ -1,9 +1,12 @@
 import { redirect } from "next/navigation";
 import { Pagination, UserAddress } from "./api/types";
 import { AddUserAddressType } from "./api/users-addresses";
-import { UserAddressExportedFormValues } from "./components/users/UserAddressForm";
+import {
+  UserAddressExportedFormValues,
+  UserAddressFormValues,
+} from "./components/user-addresses/UserAddressForm";
 import { SelectUser, SelectUserAddress } from "./db/schema";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 export const firstOrNull = <T>(data: T[] | null): T | null => {
   if (!data || !data[0]) {
@@ -39,21 +42,6 @@ export const paginationOrDefault = (
 export const formatFullname = (user: SelectUser): string =>
   `${user.firstName} ${user.lastName}`;
 
-export const usersAddressToSelectUserAddress = (
-  data: UserAddress
-): SelectUserAddress => ({
-  userId: data.userId,
-  addressType: data.addressType,
-  postCode: data.postCode,
-  city: data.city,
-  countryCode: data.countryCode,
-  street: data.street,
-  buildingNumber: data.buildingNumber,
-  createdAt: new Date(data.createdAt),
-  updatedAt: new Date(data.updatedAt),
-  validFrom: new Date(data.validFrom),
-});
-
 export const formatLine = (...vars: (string | undefined)[]): string | null => {
   const defined = vars.filter((v) => v !== undefined);
   return defined.length ? defined.join(" ") : null;
@@ -74,7 +62,9 @@ export const formatUserAddressFormatValues = (
 export const userAddressPrimaryKeyToString = (
   userAddress: SelectUserAddress
 ): string => {
-  return `${userAddress.userId}-${userAddress.addressType}-${userAddress.validFrom.toISOString()}`;
+  return `${userAddress.userId}-${
+    userAddress.addressType
+  }-${userAddress.validFrom}`;
 };
 
 export const userAddressFormValuesToAddUserAddressType = (
@@ -83,7 +73,7 @@ export const userAddressFormValuesToAddUserAddressType = (
   return {
     userId: formValues.userId,
     addressType: formValues.addressType,
-    validFrom: new Date(formValues.validFrom),
+    validFrom: formValues.validFrom,
     postCode: formValues.postCode,
     city: formValues.city,
     countryCode: formValues.countryCode,
@@ -92,7 +82,20 @@ export const userAddressFormValuesToAddUserAddressType = (
   };
 };
 
-
 export const formatTimestamp = (value: Date): string => {
-  return dayjs(value).format("DD.MM.YYYY HH:mm:ss")
-}
+  return dayjs(value).format("DD.MM.YYYY HH:mm:ss");
+};
+
+export const selectUsersAddressToUserAddressFormValues = (
+  value: SelectUserAddress
+): UserAddressFormValues => ({
+  addressType: value.addressType,
+  buildingNumber: value.buildingNumber,
+  city: value.city,
+  countryCode: value.countryCode,
+  postCode: value.postCode,
+  street: value.street,
+  userId: value.userId,
+  validFrom: value.validFrom,
+  validFromPreview: dayjs(value.validFrom)
+});
