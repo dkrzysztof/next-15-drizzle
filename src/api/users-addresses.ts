@@ -1,12 +1,11 @@
-import { db } from "@/db";
 import {
   SelectUser,
   SelectUserAddress,
   UserAddressGroupedPrimaryKey,
 } from "@/db/schema";
-import { USERS_ADDRESS_SELECT_OBJECT } from "@/db/select";
 import { firstOrNull } from "@/utils";
 import { and, count, eq } from "drizzle-orm";
+import { db } from "@/db";
 import { UserAddressAddressType, usersAddresses } from "../../drizzle/schema";
 import { Paginated, Pagination, ServerActionResult } from "./types";
 
@@ -105,7 +104,7 @@ export const getUsersAddressesByUserId = async (
   { page, pageSize }: Pagination
 ): Promise<Paginated<SelectUserAddress>> => {
   const data = await db
-    .select(USERS_ADDRESS_SELECT_OBJECT)
+    .select()
     .from(usersAddresses)
     .orderBy(
       usersAddresses.validFrom,

@@ -27,12 +27,12 @@ export const useEventActionState = <Payload>({
   useEffect(() => {
     if (result) {
       if (result.isSuccess ) {
-        onSuccess && onSuccess(result);
+        if(onSuccess) onSuccess(result);
       } else {
-        onError && onError(result);
+        if(onError) onError(result);
       }
     }
-  }, [result]);
+  }, [result, onSuccess, onError]);
 
   return [result, formAction, pending];
 };

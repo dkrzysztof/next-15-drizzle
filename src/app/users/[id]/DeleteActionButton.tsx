@@ -17,18 +17,18 @@ export const DeleteActionButton: React.FC<Props> = ({ usersAddress }) => {
   const resolved = useRef<(() => void) | null>(null);
   const rejected = useRef<(() => void) | null>(null);
 
-  const [_, formAction] = useEventActionState<
+  const [, formAction] = useEventActionState<
     Required<UserAddressGroupedPrimaryKey>
   >({
     serverAction: handleRemoveUserAddress,
     onSuccess: (result: ServerActionResult) => {
       message.success(result.message);
       replace(`/users/${usersAddress.userId}`);
-      resolved.current && resolved.current();
+      if (resolved.current) resolved.current();
     },
     onError: (result: ServerActionResult) => {
       message.error(result.message);
-      rejected.current && rejected.current();
+      if (rejected.current) rejected.current();
     },
   });
 

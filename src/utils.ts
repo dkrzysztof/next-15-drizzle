@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
+import countries from "i18n-iso-countries";
 import { redirect } from "next/navigation";
+import { SelectUser, SelectUserAddress } from "@/db/schema";
 import { Pagination } from "./api/types";
 import { AddUserAddressType } from "./api/users-addresses";
-import { SelectUser, SelectUserAddress } from "./db/schema";
-import countries from "i18n-iso-countries";
 import {
   UserAddressExportedFormValues,
   UserAddressFormValues,
@@ -17,6 +17,7 @@ export const firstOrNull = <T>(data: T[] | null): T | null => {
   return data[0];
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const shouldBeNumber = (value: any): number => {
   if (Number.isNaN(+value)) {
     redirect("/400");
@@ -25,8 +26,8 @@ export const shouldBeNumber = (value: any): number => {
   return +value;
 };
 
-export const numberOrDefault = (value: any, defaultValue: number): number => {
-  if (Number.isNaN(+value)) {
+export const numberOrDefault = (value: string | number | undefined, defaultValue: number): number => {
+  if (value === undefined || Number.isNaN(+value)) {
     return defaultValue;
   }
 
@@ -34,7 +35,7 @@ export const numberOrDefault = (value: any, defaultValue: number): number => {
 };
 
 export const paginationOrDefault = (
-  pagination: Record<keyof Pagination, any>
+  pagination: Record<keyof Pagination, string | number | undefined>
 ): Pagination => ({
   page: numberOrDefault(pagination.page, 1),
   pageSize: numberOrDefault(pagination.pageSize, 4),

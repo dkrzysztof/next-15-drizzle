@@ -15,12 +15,11 @@ import {
 } from "antd";
 import countries from "i18n-iso-countries";
 import React, { startTransition } from "react";
+import { AddressTypeTag } from "../atoms/AddressTypeTag";
 import { LiveFormUsersAddressPreview } from "../organisms/LiveFormUsersAddressPreview";
 import { UserAddressExportedFormValues, UserAddressFormValues } from "../types";
-import { AddressTypeTagSelectOptions } from "./SelectOptionsFromArray";
-import { AddressTypeTag } from "../atoms/AddressTypeTag";
-
-countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
+import config from "i18n-iso-countries/langs/en.json";
+countries.registerLocale(config);
 
 type Props = {
   formType: "edit" | "create";

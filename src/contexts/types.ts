@@ -1,6 +1,6 @@
-export type ToggleModalValue<T extends object> = {
+export type ToggleModalValue<T> = {
   isOpen: boolean;
   open: (value: boolean) => void;
   entity: T | null;
-  updateEntity: (value: any | null) => void;
+  updateEntity: (value: T | null) => void;
 };

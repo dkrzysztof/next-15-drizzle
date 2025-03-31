@@ -43,7 +43,7 @@ export const EditUserAddressModal: React.FC = () => {
     if (entity) {
       form.setFieldsValue(selectUsersAddressToUserAddressFormValues(entity));
     }
-  }, [entity]);
+  }, [entity, form]);
 
   return (
     <Modal
