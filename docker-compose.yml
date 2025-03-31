@@ -13,6 +13,12 @@ services:
       - ./build/local/docker/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5431:5432"
+  app:
+    build:
+      dockerfile: ./Dockerfile
+    image: next-15-drizzle
+    ports:
+      - "3003:3000"
 
 volumes:
   nextjs-task-db-data:
