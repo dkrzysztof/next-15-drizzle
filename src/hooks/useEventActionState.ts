@@ -32,7 +32,7 @@ export const useEventActionState = <Payload>({
         if(onError) onError(result);
       }
     }
-  }, [result, onSuccess, onError]);
+  }, [result]);
 
   return [result, formAction, pending];
 };
