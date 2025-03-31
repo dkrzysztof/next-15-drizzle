@@ -1,6 +1,10 @@
 "use client";
 import { SelectUser } from "@/db/schema";
 import {
+  userAddressFormValuesToUserAddressExportedFormValues,
+  validateIsCountryCodeIso3166_1Alpha3,
+} from "@/utils";
+import {
   Button,
   DatePicker,
   Form,
@@ -9,41 +13,14 @@ import {
   Row,
   Select,
 } from "antd";
-import dayjs from "dayjs";
 import countries from "i18n-iso-countries";
 import React, { startTransition } from "react";
-import { AddressTypeTag } from "../atoms/AddressTypeTag";
 import { LiveFormUsersAddressPreview } from "../organisms/LiveFormUsersAddressPreview";
-import { UserAddressAddressType } from "../../../drizzle/schema";
+import { UserAddressExportedFormValues, UserAddressFormValues } from "../types";
+import { AddressTypeTagSelectOptions } from "./SelectOptionsFromArray";
+import { AddressTypeTag } from "../atoms/AddressTypeTag";
 
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
-
-export type UserAddressFormValues = {
-  userId?: SelectUser["id"];
-  addressType?: UserAddressAddressType;
-  validFrom?: string;
-  validFromPreview?: dayjs.Dayjs;
-  street?: string;
-  buildingNumber?: string;
-  postCode?: string;
-  countryCode?: string;
-  city?: string;
-};
-
-export type UserAddressExportedFormValues = Omit<
-  UserAddressFormValues,
-  "validFrom" | "validFromPreview"
-> & {
-  validFrom?: string;
-};
-
-const userAddressFormValuesToUserAddressExportedFormValues = ({
-  validFromPreview,
-  ...value
-}: Required<UserAddressFormValues>): Required<UserAddressExportedFormValues> => ({
-  ...value,
-  validFrom: value.validFrom ?? validFromPreview.format("YYYY-MM-DDTHH:mm:ss.SSSSSS"),
-});
 
 type Props = {
   formType: "edit" | "create";
@@ -124,15 +101,7 @@ export const UserAddressForm: React.FC<Props> = ({
             { max: 3 },
             { required: true },
             {
-              // TODO: move to separate file?
-              validator: (_: any, value: string) => {
-                if (!value || countries.isValid(value.toUpperCase())) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error("Invalid ISO 3166-1 alpha-3 country code")
-                );
-              },
+              validator: validateIsCountryCodeIso3166_1Alpha3,
             },
           ]}
           className="w-1/3"
@@ -168,7 +137,12 @@ export const UserAddressForm: React.FC<Props> = ({
         <Form.Item hidden name="validFrom">
           <Input hidden />
         </Form.Item>
-        <Form.Item label="Valid From" name="validFromPreview" className="w-1/2">
+        <Form.Item
+          label="Valid From"
+          name="validFromPreview"
+          className="w-1/2"
+          rules={[{ required: true }]}
+        >
           <DatePicker
             showTime
             className="w-full"

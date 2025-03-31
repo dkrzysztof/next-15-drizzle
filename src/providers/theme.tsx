@@ -8,14 +8,14 @@ export const AntDesignProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   return (
-    <App className="w-full">
-      <ConfigProvider
-        theme={{
-          algorithm: [theme.darkAlgorithm],
-        }}
-      >
+    <ConfigProvider
+      theme={{
+        algorithm: [theme.darkAlgorithm],
+      }}
+    >
+      <App className="w-full">
         <AntdRegistry>{children}</AntdRegistry>
-      </ConfigProvider>
-    </App>
+      </App>
+    </ConfigProvider>
   );
 };

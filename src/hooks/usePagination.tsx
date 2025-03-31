@@ -1,7 +1,7 @@
 "use client";
 import { PaginationResponse } from "@/api/types";
 import { TablePaginationConfig } from "antd";
-import { usePathname, useSearchParams, useRouter } from "next/navigation"
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 type UsePagination = {
   onPaginationChange: (config: TablePaginationConfig) => void;
@@ -31,7 +31,7 @@ export const usePagination = (
     pagination: {
       current: pagination.page,
       pageSize: pagination.pageSize,
-      total: pagination.total
+      total: pagination.total,
     },
   };
 };

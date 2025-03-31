@@ -6,8 +6,8 @@ import {
   editUserAddressToUser,
   removeUserAddress,
 } from "@/api/users-addresses";
-import { UserAddressExportedFormValues } from "@/ui/molecules/UserAddressForm";
-import { SelectUserAddress, UserAddressGroupedPrimaryKey } from "@/db/schema";
+import { UserAddressGroupedPrimaryKey } from "@/db/schema";
+import { UserAddressExportedFormValues } from "@/ui/types";
 import { userAddressFormValuesToAddUserAddressType } from "@/utils";
 
 export async function handleAddUserAddress(

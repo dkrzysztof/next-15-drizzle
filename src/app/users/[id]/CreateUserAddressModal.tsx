@@ -2,8 +2,8 @@
 import "@ant-design/v5-patch-for-react-19";
 
 import { ServerActionResult } from "@/api/types";
-import { SelectUser } from "@/db/schema";
-import { Alert, Form, message, Modal } from "antd";
+import { SelectUser, UserAddressGroupedPrimaryKey } from "@/db/schema";
+import { Alert, App, Form, message, Modal } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useActionState, useEffect } from "react";
 import {
@@ -11,6 +11,7 @@ import {
   UserAddressForm,
 } from "../../../ui/molecules/UserAddressForm";
 import { handleAddUserAddress } from "./actions";
+import { useEventActionState } from "@/hooks/useEventActionState";
 
 type Props = {
   userId: SelectUser["id"];
@@ -23,22 +24,20 @@ export const CreateUserAddressModal: React.FC<Props> = ({
   open,
   closeModal,
 }) => {
-  const [messageApi, contextHolder] = message.useMessage();
+  const message = App.useApp().message;
   const { replace } = useRouter();
-  const [result, formAction, pending] = useActionState<
-    ServerActionResult | null,
-    Required<UserAddressExportedFormValues>
-  >(handleAddUserAddress, null);
-
   const [form] = Form.useForm<UserAddressExportedFormValues>();
 
-  useEffect(() => {
-    if (result?.isSuccess) {
-      messageApi.success(result.message);
+  const [result, formAction, pending] = useEventActionState<
+    Required<UserAddressExportedFormValues>
+  >({
+    serverAction: handleAddUserAddress,
+    onSuccess: (result: ServerActionResult): void => {
+      message.success(result.message);
       replace(`/users/${userId}`);
       closeModal();
-    }
-  }, [result]);
+    },
+  });
 
   return (
     <Modal
@@ -47,7 +46,6 @@ export const CreateUserAddressModal: React.FC<Props> = ({
       footer={null}
       onCancel={closeModal}
     >
-      {contextHolder}
       {result && !result.isSuccess ? <Alert type="error" {...result} /> : null}
       <UserAddressForm
         formType="create"
@@ -60,4 +58,3 @@ export const CreateUserAddressModal: React.FC<Props> = ({
     </Modal>
   );
 };
-

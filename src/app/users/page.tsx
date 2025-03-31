@@ -4,7 +4,7 @@ import { paginationOrDefault } from "@/utils";
 import { Row, Skeleton } from "antd";
 import { Suspense } from "react";
 import { AddUserButton } from "./AddUserButton";
-import { UsersTable } from "./UsersTable";
+import { UsersTable } from "../../ui/organisms/UsersTable";
 
 type SearchPageProps = {
   searchParams: {

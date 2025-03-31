@@ -3,8 +3,8 @@ import { SelectUserAddress } from "@/db/schema";
 import { EditOutlined, MenuOutlined } from "@ant-design/icons";
 import { Button, Dropdown } from "antd";
 import React from "react";
-import { useToggleModal } from "../../../contexts/ToggleModal";
-import { DeleteActionButton } from "./DeleteActionButton";
+import { useToggleModal } from "../../contexts/ToggleModal";
+import { DeleteActionButton } from "../../app/users/[id]/DeleteActionButton";
 
 export type Props = {
   usersAddress: SelectUserAddress;
@@ -27,7 +27,6 @@ export const UsersAddressesContextMenu: React.FC<Props> = ({
             onClick: (event) => {
               event.domEvent.stopPropagation();
               updateEntity(usersAddress);
-              console.log(usersAddress.validFrom);
               open(true);
             },
           },

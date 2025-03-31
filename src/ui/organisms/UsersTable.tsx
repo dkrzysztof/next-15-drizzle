@@ -2,11 +2,39 @@
 import "@ant-design/v5-patch-for-react-19";
 
 import { SelectUser } from "@/db/schema";
-import { Table } from "antd";
+import { Table, TableColumnType } from "antd";
 import { useRouter } from "next/navigation";
-import { USERS_TABLE_COLUMNS } from "./columns";
 import { PaginationResponse } from "@/api/types";
 import { usePagination } from "@/hooks/usePagination";
+import { UserContextMenu } from "@/ui/organisms/UserContextMenu";
+import { renderStatusTag } from "../atoms/StatusTag";
+
+const USERS_TABLE_COLUMNS: TableColumnType<SelectUser>[] = [
+  {
+    title: "Name",
+    dataIndex: "firstName",
+  },
+  {
+    title: "Last name",
+    dataIndex: "lastName",
+  },
+  {
+    title: "Email",
+    dataIndex: "email",
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    render: renderStatusTag,
+  },
+  {
+    title: "Actions",
+    key: "actions",
+    width: 30,
+    align: "right",
+    render: (record: SelectUser) => <UserContextMenu user={record} />,
+  },
+];
 
 type Props = {
   dataSource: SelectUser[];

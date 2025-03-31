@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import { UserAddressAddressType, usersAddresses } from "../../drizzle/schema";
 
+// TODO: cleanup 
 export const USERS_ADDRESS_SELECT_OBJECT = {
   userId: usersAddresses.userId,
   addressType: sql<UserAddressAddressType>`${usersAddresses.addressType}`,

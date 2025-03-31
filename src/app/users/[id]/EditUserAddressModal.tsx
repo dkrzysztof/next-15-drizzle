@@ -3,42 +3,41 @@ import "@ant-design/v5-patch-for-react-19";
 
 import { ServerActionResult } from "@/api/types";
 import { SelectUserAddress } from "@/db/schema";
+import { useEventActionState } from "@/hooks/useEventActionState";
 import { selectUsersAddressToUserAddressFormValues } from "@/utils";
-import { Alert, App, Form, message, Modal } from "antd";
+import { Alert, App, Form, Modal } from "antd";
 import { useRouter } from "next/navigation";
-import React, { useActionState, useEffect } from "react";
-import {
-  UserAddressExportedFormValues,
-  UserAddressForm,
-  UserAddressFormValues,
-} from "../../../ui/molecules/UserAddressForm";
-import { handleEditUserAddress } from "./actions";
+import React, { useEffect } from "react";
 import { useToggleModal } from "../../../contexts/ToggleModal";
+import { handleEditUserAddress } from "./actions";
+import { UserAddressForm } from "@/ui/molecules/UserAddressForm";
+import {
+  UserAddressFormValues,
+  UserAddressExportedFormValues,
+} from "@/ui/types";
 
 export const EditUserAddressModal: React.FC = () => {
   const { replace } = useRouter();
-  const [messageApi, antdMessageContext] = message.useMessage();
+  const message = App.useApp().message;
   const [form] = Form.useForm<UserAddressFormValues>();
   const { entity, open, isOpen, updateEntity } =
     useToggleModal<SelectUserAddress>();
 
-  const [result, formAction, pending] = useActionState<
-    ServerActionResult | null,
-    Required<UserAddressExportedFormValues>
-  >(handleEditUserAddress, null);
-
-  const handleCancel = () => {
+  const handleCloseModal = () => {
     updateEntity(null);
     open(false);
   };
 
-  useEffect(() => {
-    if (result?.isSuccess) {
-      messageApi.success(result.message);
+  const [result, formAction, pending] = useEventActionState<
+    Required<UserAddressExportedFormValues>
+  >({
+    serverAction: handleEditUserAddress,
+    onSuccess: (result: ServerActionResult): void => {
+      message.success(result.message);
       replace(`/users/${entity?.userId}`);
-      open(false);
-    }
-  }, [result]);
+      handleCloseModal();
+    },
+  });
 
   useEffect(() => {
     if (entity) {
@@ -51,9 +50,8 @@ export const EditUserAddressModal: React.FC = () => {
       title="Edit Address"
       open={isOpen}
       footer={null}
-      onCancel={handleCancel}
+      onCancel={handleCloseModal}
     >
-      {antdMessageContext}
       {entity ? (
         <>
           {result && !result.isSuccess ? (
@@ -65,7 +63,7 @@ export const EditUserAddressModal: React.FC = () => {
             userId={entity.userId}
             action={formAction}
             loading={pending}
-            onCancel={handleCancel}
+            onCancel={handleCloseModal}
           />
         </>
       ) : null}

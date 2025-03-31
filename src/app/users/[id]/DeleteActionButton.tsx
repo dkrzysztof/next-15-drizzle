@@ -1,10 +1,11 @@
 import { ServerActionResult } from "@/api/types";
-import { UsersAddressPreview } from "@/ui/molecules/UsersAddressPreview";
 import { SelectUserAddress, UserAddressGroupedPrimaryKey } from "@/db/schema";
+import { useEventActionState } from "@/hooks/useEventActionState";
+import { UsersAddressPreview } from "@/ui/molecules/UsersAddressPreview";
 import { selectUsersAddressToUserAddressFormValues } from "@/utils";
-import { message, Modal } from "antd";
+import { App } from "antd";
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect, startTransition } from "react";
+import { startTransition, useRef } from "react";
 import { handleRemoveUserAddress } from "./actions";
 
 export type Props = {
@@ -12,23 +13,27 @@ export type Props = {
 };
 export const DeleteActionButton: React.FC<Props> = ({ usersAddress }) => {
   const { replace } = useRouter();
-  const [messageApi, antdMessageContextHolder] = message.useMessage();
-  const [modalApi, antdModalContextHolder] = Modal.useModal();
+  const { modal, message } = App.useApp();
+  const resolved = useRef<(() => void) | null>(null);
+  const rejected = useRef<(() => void) | null>(null);
 
-  const [result, formAction, pending] = useActionState<
-    ServerActionResult | null,
+  const [_, formAction] = useEventActionState<
     Required<UserAddressGroupedPrimaryKey>
-  >(handleRemoveUserAddress, null);
-
-  useEffect(() => {
-    if (result?.isSuccess) {
-      messageApi.success(result.message);
+  >({
+    serverAction: handleRemoveUserAddress,
+    onSuccess: (result: ServerActionResult) => {
+      message.success(result.message);
       replace(`/users/${usersAddress.userId}`);
-    }
-  }, [result]);
+      resolved.current && resolved.current();
+    },
+    onError: (result: ServerActionResult) => {
+      message.error(result.message);
+      rejected.current && rejected.current();
+    },
+  });
 
   const triggerAction = () => {
-    modalApi.confirm({
+    modal.confirm({
       title: "Confirm Delete",
       content: (
         <>
@@ -40,25 +45,24 @@ export const DeleteActionButton: React.FC<Props> = ({ usersAddress }) => {
         </>
       ),
       okButtonProps: {
-        loading: pending,
         danger: true,
       },
-      onOk: () =>
+
+      onOk: () => {
         startTransition(() =>
           formAction({
             addressType: usersAddress.addressType,
             userId: usersAddress.userId,
             validFrom: usersAddress.validFrom,
           })
-        ),
+        );
+        return new Promise<void>((resolve, reject) => {
+          resolved.current = resolve;
+          rejected.current = reject;
+        });
+      },
     });
   };
 
-  return (
-    <>
-      {antdMessageContextHolder}
-      {antdModalContextHolder}
-      <a onClick={triggerAction}>Delete</a>
-    </>
-  );
+  return <a onClick={triggerAction}>Delete</a>;
 };

@@ -1,12 +1,13 @@
+import dayjs from "dayjs";
 import { redirect } from "next/navigation";
-import { Pagination, UserAddress } from "./api/types";
+import { Pagination } from "./api/types";
 import { AddUserAddressType } from "./api/users-addresses";
+import { SelectUser, SelectUserAddress } from "./db/schema";
+import countries from "i18n-iso-countries";
 import {
   UserAddressExportedFormValues,
   UserAddressFormValues,
-} from "./ui/molecules/UserAddressForm";
-import { SelectUser, SelectUserAddress } from "./db/schema";
-import dayjs, { Dayjs } from "dayjs";
+} from "./ui/types";
 
 export const firstOrNull = <T>(data: T[] | null): T | null => {
   if (!data || !data[0]) {
@@ -42,6 +43,10 @@ export const paginationOrDefault = (
 export const formatFullname = (user: SelectUser): string =>
   `${user.firstName} ${user.lastName}`;
 
+export const formatTimestamp = (value: Date): string => {
+  return dayjs(value).format("DD.MM.YYYY HH:mm:ss");
+};
+
 export const formatLine = (...vars: (string | undefined)[]): string | null => {
   const defined = vars.filter((v) => v !== undefined);
   return defined.length ? defined.join(" ") : null;
@@ -62,9 +67,7 @@ export const formatUserAddressFormatValues = (
 export const userAddressPrimaryKeyToString = (
   userAddress: SelectUserAddress
 ): string => {
-  return `${userAddress.userId}-${
-    userAddress.addressType
-  }-${userAddress.validFrom}`;
+  return `${userAddress.userId}-${userAddress.addressType}-${userAddress.validFrom}`;
 };
 
 export const userAddressFormValuesToAddUserAddressType = (
@@ -82,10 +85,6 @@ export const userAddressFormValuesToAddUserAddressType = (
   };
 };
 
-export const formatTimestamp = (value: Date): string => {
-  return dayjs(value).format("DD.MM.YYYY HH:mm:ss");
-};
-
 export const selectUsersAddressToUserAddressFormValues = (
   value: SelectUserAddress
 ): UserAddressFormValues => ({
@@ -97,5 +96,24 @@ export const selectUsersAddressToUserAddressFormValues = (
   street: value.street,
   userId: value.userId,
   validFrom: value.validFrom,
-  validFromPreview: dayjs(value.validFrom)
+  validFromPreview: dayjs(value.validFrom),
 });
+
+export const userAddressFormValuesToUserAddressExportedFormValues = ({
+  validFromPreview,
+  ...value
+}: Required<UserAddressFormValues>): Required<UserAddressExportedFormValues> => ({
+  ...value,
+  validFrom:
+    value.validFrom ?? validFromPreview.format("YYYY-MM-DDTHH:mm:ss.SSSSSS"),
+});
+
+export const validateIsCountryCodeIso3166_1Alpha3 = (
+  _: unknown,
+  value: string
+): Promise<void> => {
+  if (!value || countries.isValid(value.toUpperCase())) {
+    return Promise.resolve();
+  }
+  return Promise.reject(new Error("Invalid ISO 3166-1 alpha-3 country code"));
+};

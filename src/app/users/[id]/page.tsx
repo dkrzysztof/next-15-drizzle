@@ -2,8 +2,8 @@ import { getUserById } from "@/api/users";
 import { getUsersAddressesByUserId } from "@/api/users-addresses";
 import { PageHeader } from "@/ui/atoms/PageHeader";
 import { formatFullname, paginationOrDefault, shouldBeNumber } from "@/utils";
-import { CreateUserAddreesButton } from "./CreateUserAddreesButton";
-import { UsersAddressesTable } from "./UsersAddressesTable";
+import { CreateUserAddressButton } from "./CreateUserAddressButton";
+import { UsersAddressesTable } from "@/ui/organisms/UsersAddressesTable";
 import { Suspense } from "react";
 import { Col, Row, Skeleton } from "antd";
 
@@ -34,10 +34,12 @@ export default async function UsersAddresses({
       <PageHeader
         title={formatFullname(user)}
         name="List of user's addresses"
+        backLink="/users"
+        backLinkName="Users list"
       />
       <Row className="mb-3 w-full">
         <Col className="ml-auto">
-          <CreateUserAddreesButton userId={userId} />
+          <CreateUserAddressButton userId={userId} />
         </Col>
       </Row>
       <Suspense

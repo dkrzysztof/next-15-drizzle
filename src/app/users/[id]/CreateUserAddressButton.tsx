@@ -8,7 +8,7 @@ export interface Props {
   userId: SelectUser["id"];
 }
 
-export const CreateUserAddreesButton: React.FC<Props> = ({ userId }) => {
+export const CreateUserAddressButton: React.FC<Props> = ({ userId }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
 
   return (
