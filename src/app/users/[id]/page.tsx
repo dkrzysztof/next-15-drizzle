@@ -8,13 +8,13 @@ import { Suspense } from "react";
 import { Col, Row, Skeleton } from "antd";
 
 type PageParams = {
-  searchParams: {
+  searchParams: Promise<{
     page: string;
     pageSize: string;
-  };
-  params: {
+  }>;
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export default async function UsersAddresses({

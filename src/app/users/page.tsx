@@ -7,10 +7,10 @@ import { AddUserButton } from "./AddUserButton";
 import { UsersTable } from "../../ui/organisms/UsersTable";
 
 type SearchPageProps = {
-  searchParams: {
+  searchParams: Promise<{
     page: string;
     pageSize: string;
-  };
+  }>;
 };
 
 export default async function UsersPage({ searchParams }: SearchPageProps) {

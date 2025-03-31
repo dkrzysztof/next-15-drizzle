@@ -17,15 +17,15 @@ import {
 } from "@/ui/types";
 
 export const EditUserAddressModal: React.FC = () => {
-  const { replace } = useRouter();
+  const { refresh } = useRouter();
   const message = App.useApp().message;
   const [form] = Form.useForm<UserAddressFormValues>();
   const { entity, open, isOpen, updateEntity } =
     useToggleModal<SelectUserAddress>();
 
   const handleCloseModal = () => {
-    updateEntity(null);
     open(false);
+    updateEntity(null);
   };
 
   const [result, formAction, pending] = useEventActionState<
@@ -34,7 +34,7 @@ export const EditUserAddressModal: React.FC = () => {
     serverAction: handleEditUserAddress,
     onSuccess: (result: ServerActionResult): void => {
       message.success(result.message);
-      replace(`/users/${entity?.userId}`);
+      refresh();
       handleCloseModal();
     },
   });

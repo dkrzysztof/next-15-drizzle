@@ -23,7 +23,7 @@ export const CreateUserAddressModal: React.FC<Props> = ({
   closeModal,
 }) => {
   const message = App.useApp().message;
-  const { replace } = useRouter();
+  const { refresh } = useRouter();
   const [form] = Form.useForm<UserAddressExportedFormValues>();
 
   const [result, formAction, pending] = useEventActionState<
@@ -32,8 +32,8 @@ export const CreateUserAddressModal: React.FC<Props> = ({
     serverAction: handleAddUserAddress,
     onSuccess: (result: ServerActionResult): void => {
       message.success(result.message);
-      replace(`/users/${userId}`);
       closeModal();
+      refresh();
     },
   });
 
