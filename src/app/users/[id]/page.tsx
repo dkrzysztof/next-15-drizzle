@@ -1,9 +1,9 @@
 import { getUserById } from "@/api/users";
 import { getUsersAddressesByUserId } from "@/api/users-addresses";
-import { PageHeader } from "@/components/common/PageHeader";
+import { PageHeader } from "@/ui/atoms/PageHeader";
 import { formatFullname, paginationOrDefault, shouldBeNumber } from "@/utils";
-import { CreateUserAddreesButtonWithTheme } from "./CreateUserAddreesButton";
-import { UsersAddressesTableWithTheme } from "./UsersAddressesTable";
+import { CreateUserAddreesButton } from "./CreateUserAddreesButton";
+import { UsersAddressesTable } from "./UsersAddressesTable";
 import { Suspense } from "react";
 import { Col, Row, Skeleton } from "antd";
 
@@ -37,7 +37,7 @@ export default async function UsersAddresses({
       />
       <Row className="mb-3 w-full">
         <Col className="ml-auto">
-          <CreateUserAddreesButtonWithTheme userId={userId} />
+          <CreateUserAddreesButton userId={userId} />
         </Col>
       </Row>
       <Suspense
@@ -49,7 +49,7 @@ export default async function UsersAddresses({
         }
         fallback={<Skeleton />}
       >
-        <UsersAddressesTableWithTheme
+        <UsersAddressesTable
           dataSource={usersAddresses}
           pagination={paginationResponse}
         />

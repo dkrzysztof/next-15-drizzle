@@ -32,7 +32,7 @@ export const addUserAddressToUser = async (
 
   if (userAddress) {
     return {
-      type: "error",
+      isSuccess: false,
       message:
         "User address with given address type and valid from date already exist!",
     };
@@ -40,7 +40,7 @@ export const addUserAddressToUser = async (
 
   await db.insert(usersAddresses).values(data);
   return {
-    type: "success",
+    isSuccess: true,
     message: "New address was added!",
   };
 };
@@ -78,7 +78,7 @@ export const editUserAddressToUser = async ({
 
   if (!userAddress) {
     return {
-      type: "error",
+      isSuccess: false,
       message: `User's address was not found`,
     };
   }
@@ -95,7 +95,7 @@ export const editUserAddressToUser = async ({
     );
 
   return {
-    type: "success",
+    isSuccess: true,
     message: `Successfuly updated user's address`,
   };
 };
@@ -147,7 +147,7 @@ export const removeUserAddress = async ({
 
   if (!userAddress) {
     return {
-      type: "error",
+      isSuccess: false,
       message: `User's address was not found`,
     };
   }
@@ -163,7 +163,7 @@ export const removeUserAddress = async ({
     );
 
   return {
-    type: "success",
+    isSuccess: true,
     message: `Successfuly removed user's address`,
   };
 };

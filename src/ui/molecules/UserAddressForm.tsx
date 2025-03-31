@@ -12,8 +12,8 @@ import {
 import dayjs from "dayjs";
 import countries from "i18n-iso-countries";
 import React, { startTransition } from "react";
-import { AddressTypeTag } from "../users/AddressTypeTag";
-import { LiveFormUsersAddressPreview } from "./LiveFormUsersAddressPreview";
+import { AddressTypeTag } from "../atoms/AddressTypeTag";
+import { LiveFormUsersAddressPreview } from "../organisms/LiveFormUsersAddressPreview";
 import { UserAddressAddressType } from "../../../drizzle/schema";
 
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"));

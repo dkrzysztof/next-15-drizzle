@@ -1,10 +1,10 @@
 import { getAllUsers } from "@/api/users";
-import { PageHeader } from "@/components/common/PageHeader";
+import { PageHeader } from "@/ui/atoms/PageHeader";
 import { paginationOrDefault } from "@/utils";
 import { Row, Skeleton } from "antd";
 import { Suspense } from "react";
 import { AddUserButton } from "./AddUserButton";
-import { UsersTableWithTheme } from "./UsersTable";
+import { UsersTable } from "./UsersTable";
 
 type SearchPageProps = {
   searchParams: {
@@ -35,7 +35,7 @@ export default async function UsersPage({ searchParams }: SearchPageProps) {
         <Row className="w-full mb-3">
           <AddUserButton />
         </Row>
-        <UsersTableWithTheme
+        <UsersTable
           dataSource={users}
           pagination={paginationResponse}
         />

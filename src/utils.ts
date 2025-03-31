@@ -4,7 +4,7 @@ import { AddUserAddressType } from "./api/users-addresses";
 import {
   UserAddressExportedFormValues,
   UserAddressFormValues,
-} from "./components/user-addresses/UserAddressForm";
+} from "./ui/molecules/UserAddressForm";
 import { SelectUser, SelectUserAddress } from "./db/schema";
 import dayjs, { Dayjs } from "dayjs";
 

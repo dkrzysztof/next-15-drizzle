@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import React from "react";
+import { AntDesignProvider } from "@/providers/theme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,14 +26,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="flex flex-col items-center justify-center min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-          <AntdRegistry>{children}</AntdRegistry>
+          <AntDesignProvider>{children}</AntDesignProvider>
         </div>
       </body>
     </html>

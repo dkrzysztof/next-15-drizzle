@@ -1,7 +1,7 @@
 import { Form, FormInstance } from "antd";
 import React from "react";
-import { UserAddressFormValues } from "./UserAddressForm";
-import { UsersAddressPreview } from "./UsersAddressPreview";
+import { UserAddressFormValues } from "../molecules/UserAddressForm";
+import { UsersAddressPreview } from "../molecules/UsersAddressPreview";
 
 export type Props = {
   form: FormInstance;

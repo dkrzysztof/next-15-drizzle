@@ -1,15 +1,14 @@
 "use client";
 import { SelectUser } from "@/db/schema";
-import { App, Button, Col, Row } from "antd";
+import { Button } from "antd";
 import React, { useState } from "react";
-import { CreateUserAddressModalWithTheme } from "./CreateUserAddreesModal";
-import withTheme from "@/theme";
+import { CreateUserAddressModal } from "./CreateUserAddressModal";
 
 export interface Props {
   userId: SelectUser["id"];
 }
 
-const CreateUserAddreesButton: React.FC<Props> = ({ userId }) => {
+export const CreateUserAddreesButton: React.FC<Props> = ({ userId }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
 
   return (
@@ -17,7 +16,7 @@ const CreateUserAddreesButton: React.FC<Props> = ({ userId }) => {
       <Button type="primary" onClick={() => setOpen(true)}>
         + Add new address
       </Button>
-      <CreateUserAddressModalWithTheme
+      <CreateUserAddressModal
         open={isOpen}
         closeModal={() => setOpen(false)}
         userId={userId}
@@ -26,6 +25,3 @@ const CreateUserAddreesButton: React.FC<Props> = ({ userId }) => {
   );
 };
 
-export const CreateUserAddreesButtonWithTheme = withTheme(
-  CreateUserAddreesButton
-);

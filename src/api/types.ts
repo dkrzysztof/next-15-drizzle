@@ -23,8 +23,7 @@ export type UserAddress = SelectUserAddress & {
 }
 
 export type ServerActionResult = {
-  // TODO: remove the values which are not used, after project is finished
-  type: "warning" | "success" | "error",
+  isSuccess: boolean;
   message: string;
 }
 

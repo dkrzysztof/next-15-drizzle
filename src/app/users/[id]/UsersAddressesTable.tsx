@@ -3,11 +3,10 @@
 import { PaginationResponse } from "@/api/types";
 import { SelectUserAddress } from "@/db/schema";
 import { usePagination } from "@/hooks/usePagination";
-import withTheme from "@/theme";
 import { userAddressPrimaryKeyToString } from "@/utils";
 import { Table } from "antd";
 import { USERS_ADDRESSES_COLUMNS } from "./columns";
-import { EditModalProvider } from "./context";
+import { ToggleModalProvider } from "../../../contexts/ToggleModal";
 import { EditUserAddressModal } from "./EditUserAddressModal";
 
 type Props = {
@@ -15,12 +14,12 @@ type Props = {
   pagination: PaginationResponse;
 };
 
-const UsersAddressesTable = ({ dataSource, pagination }: Props) => {
+export const UsersAddressesTable = ({ dataSource, pagination }: Props) => {
   const { onPaginationChange, pagination: tablePagination } =
     usePagination(pagination);
 
   return (
-    <EditModalProvider>
+    <ToggleModalProvider>
       <Table
         pagination={tablePagination}
         className="w-full"
@@ -30,8 +29,6 @@ const UsersAddressesTable = ({ dataSource, pagination }: Props) => {
         dataSource={dataSource}
       />
       <EditUserAddressModal />
-    </EditModalProvider>
+    </ToggleModalProvider>
   );
 };
-
-export const UsersAddressesTableWithTheme = withTheme(UsersAddressesTable);

@@ -3,14 +3,13 @@ import "@ant-design/v5-patch-for-react-19";
 
 import { ServerActionResult } from "@/api/types";
 import { SelectUser } from "@/db/schema";
-import withTheme from "@/theme";
 import { Alert, Form, message, Modal } from "antd";
 import { useRouter } from "next/navigation";
-import React, { useActionState, useEffect, useMemo } from "react";
+import React, { useActionState, useEffect } from "react";
 import {
   UserAddressExportedFormValues,
   UserAddressForm,
-} from "../../../components/user-addresses/UserAddressForm";
+} from "../../../ui/molecules/UserAddressForm";
 import { handleAddUserAddress } from "./actions";
 
 type Props = {
@@ -19,7 +18,7 @@ type Props = {
   closeModal: () => void;
 };
 
-const CreateUserAddreesModal: React.FC<Props> = ({
+export const CreateUserAddressModal: React.FC<Props> = ({
   userId,
   open,
   closeModal,
@@ -33,13 +32,8 @@ const CreateUserAddreesModal: React.FC<Props> = ({
 
   const [form] = Form.useForm<UserAddressExportedFormValues>();
 
-  const showAlert = useMemo(
-    () => result && result.type !== "success",
-    [result?.type]
-  );
-
   useEffect(() => {
-    if (result && result.type === "success") {
+    if (result?.isSuccess) {
       messageApi.success(result.message);
       replace(`/users/${userId}`);
       closeModal();
@@ -54,7 +48,7 @@ const CreateUserAddreesModal: React.FC<Props> = ({
       onCancel={closeModal}
     >
       {contextHolder}
-      {showAlert ? <Alert {...result} /> : null}
+      {result && !result.isSuccess ? <Alert type="error" {...result} /> : null}
       <UserAddressForm
         formType="create"
         userId={userId}
@@ -67,6 +61,3 @@ const CreateUserAddreesModal: React.FC<Props> = ({
   );
 };
 
-export const CreateUserAddressModalWithTheme = withTheme(
-  CreateUserAddreesModal
-);

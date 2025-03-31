@@ -1,4 +1,4 @@
-import { AddressTypeTag } from "@/components/users/AddressTypeTag";
+import { AddressTypeTag } from "@/ui/atoms/AddressTypeTag";
 import { SelectUserAddress } from "@/db/schema";
 import { formatTimestamp } from "@/utils";
 import { UsersAddressesContextMenu } from "./UsersAddressesContextMenu";

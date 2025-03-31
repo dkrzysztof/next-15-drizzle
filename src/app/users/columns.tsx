@@ -1,5 +1,5 @@
 import { SelectUser } from "@/db/schema";
-import { renderStatusTag } from "../../components/user-addresses/StatusTag";
+import { renderStatusTag } from "../../ui/atoms/StatusTag";
 import { UserContextMenu } from "./UserContextMenu";
 import { TableColumnType } from "antd";
 

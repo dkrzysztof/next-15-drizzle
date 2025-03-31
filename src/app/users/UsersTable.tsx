@@ -2,7 +2,6 @@
 import "@ant-design/v5-patch-for-react-19";
 
 import { SelectUser } from "@/db/schema";
-import withTheme from "@/theme";
 import { Table } from "antd";
 import { useRouter } from "next/navigation";
 import { USERS_TABLE_COLUMNS } from "./columns";
@@ -14,7 +13,7 @@ type Props = {
   pagination: PaginationResponse;
 };
 
-const UsersTable: React.FC<Props> = ({ dataSource, pagination }) => {
+export const UsersTable: React.FC<Props> = ({ dataSource, pagination }) => {
   const router = useRouter();
 
   const { onPaginationChange, pagination: tablePagination } =
@@ -34,5 +33,3 @@ const UsersTable: React.FC<Props> = ({ dataSource, pagination }) => {
     />
   );
 };
-
-export const UsersTableWithTheme = withTheme(UsersTable);

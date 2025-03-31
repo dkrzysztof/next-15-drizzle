@@ -11,16 +11,16 @@ import {
   UserAddressExportedFormValues,
   UserAddressForm,
   UserAddressFormValues,
-} from "../../../components/user-addresses/UserAddressForm";
+} from "../../../ui/molecules/UserAddressForm";
 import { handleEditUserAddress } from "./actions";
-import { useEditModalContext } from "./context";
+import { useToggleModal } from "../../../contexts/ToggleModal";
 
 export const EditUserAddressModal: React.FC = () => {
   const { replace } = useRouter();
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi, antdMessageContext] = message.useMessage();
   const [form] = Form.useForm<UserAddressFormValues>();
   const { entity, open, isOpen, updateEntity } =
-    useEditModalContext<SelectUserAddress>();
+    useToggleModal<SelectUserAddress>();
 
   const [result, formAction, pending] = useActionState<
     ServerActionResult | null,
@@ -33,7 +33,7 @@ export const EditUserAddressModal: React.FC = () => {
   };
 
   useEffect(() => {
-    if (result?.type === "success") {
+    if (result?.isSuccess) {
       messageApi.success(result.message);
       replace(`/users/${entity?.userId}`);
       open(false);
@@ -53,10 +53,12 @@ export const EditUserAddressModal: React.FC = () => {
       footer={null}
       onCancel={handleCancel}
     >
-      {contextHolder}
+      {antdMessageContext}
       {entity ? (
         <>
-          {result && result.type !== "success" ? <Alert {...result} /> : null}
+          {result && !result.isSuccess ? (
+            <Alert type="error" {...result} />
+          ) : null}
           <UserAddressForm
             formType="edit"
             form={form}
