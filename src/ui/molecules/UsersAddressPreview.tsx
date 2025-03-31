@@ -1,8 +1,7 @@
 import { formatUserAddressFormatValues } from "@/utils";
 import { Card } from "antd";
 import React from "react";
-import { UserAddressFormValues } from "./UserAddressForm";
-// selectUsersAddressToUserAddressFormValues
+import { UserAddressFormValues } from "../types";
 
 export type Props = {
   formValue: UserAddressFormValues;
