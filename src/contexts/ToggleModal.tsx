@@ -1,7 +1,7 @@
+/* eslint @typescript-eslint/no-explicit-any: "warn" */
 import { createContext, useCallback, useContext, useState } from "react";
 import { ToggleModalValue } from "./types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ToggleModal = createContext<ToggleModalValue<any>>({
   isOpen: false,
   open: () => {},
@@ -22,12 +22,10 @@ export const ToggleModalProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [entity, setEntity] = useState<any | null>(null);
 
   const open = useCallback((value: boolean) => setOpen(value), [setOpen]);
   const updateEntity = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (value: any | null) => setEntity(value),
     [setEntity]
   );

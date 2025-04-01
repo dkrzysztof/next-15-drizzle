@@ -7,6 +7,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
+		"lint:errors": "next lint --quiet",
 		"lint:fix": "next lint --fix",
 		"drizzle:pull": "dotenv -e .env -- drizzle-kit pull",
 		"tsc:check": "tsc --noEmit"
