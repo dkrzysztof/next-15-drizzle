@@ -9,19 +9,22 @@ export const getAllUsers = async ({
   page,
   pageSize,
 }: Pagination): Promise<Paginated<SelectUser>> => {
-  const data = await db
-    .select()
-    .from(usersTable)
-    .orderBy(asc(usersTable.id))
-    .limit(pageSize)
-    .offset((page - 1) * pageSize);
-
   const { total } = (await db
     .select({
       total: count(),
     })
     .from(usersTable)
     .then(firstOrNull)!) ?? { total: 0 };
+
+  const maxPage = Math.ceil(total / pageSize);
+  const safePage = Math.max(1, Math.min(page, maxPage));
+
+  const data = await db
+    .select()
+    .from(usersTable)
+    .orderBy(asc(usersTable.id))
+    .limit(pageSize)
+    .offset((safePage - 1) * pageSize)
 
   return {
     data,

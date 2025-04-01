@@ -103,6 +103,17 @@ export const getUsersAddressesByUserId = async (
   userId: SelectUser["id"],
   { page, pageSize }: Pagination
 ): Promise<Paginated<SelectUserAddress>> => {
+  const { total } = (await db
+    .select({
+      total: count(),
+    })
+    .from(usersAddresses)
+    .where(eq(usersAddresses.userId, userId))
+    .then(firstOrNull)!) ?? { total: 0 };
+
+  const maxPage = Math.ceil(total / pageSize);
+  const safePage = Math.max(1, Math.min(page, maxPage));
+
   const data = await db
     .select()
     .from(usersAddresses)
@@ -114,16 +125,8 @@ export const getUsersAddressesByUserId = async (
       usersAddresses.buildingNumber
     )
     .where(eq(usersAddresses.userId, userId))
-    .offset((page - 1) * pageSize)
+    .offset((safePage - 1) * pageSize)
     .limit(pageSize);
-
-  const { total } = (await db
-    .select({
-      total: count(),
-    })
-    .from(usersAddresses)
-    .where(eq(usersAddresses.userId, userId))
-    .then(firstOrNull)!) ?? { total: 0 };
 
   return {
     data,
