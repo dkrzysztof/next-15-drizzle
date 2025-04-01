@@ -14,6 +14,8 @@ services:
     ports:
       - "5431:5432"
   app:
+    depends_on:
+      - postgres
     build:
       dockerfile: ./Dockerfile
     image: next-15-drizzle

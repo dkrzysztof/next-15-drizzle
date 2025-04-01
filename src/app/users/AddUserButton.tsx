@@ -1,8 +1,9 @@
 "use client";
-import { Button, message } from "antd";
+import { Button, App } from "antd";
 import React from "react";
 
 export const AddUserButton: React.FC = () => {
+  const message = App.useApp().message
   return (
     <Button
       className="ml-auto"

@@ -2,7 +2,7 @@
 import { SelectUser } from "@/db/schema";
 import { formatFullname } from "@/utils";
 import { DeleteOutlined, EditOutlined, MenuOutlined } from "@ant-design/icons";
-import { Button, Dropdown, message } from "antd";
+import { App, Button, Dropdown } from "antd";
 import React from "react";
 
 export type Props = {
@@ -10,6 +10,7 @@ export type Props = {
 };
 
 export const UserContextMenu: React.FC<Props> = ({ user }) => {
+  const message = App.useApp().message
   return (
     <Dropdown
       trigger={["contextMenu", "click"]}
