@@ -1,4 +1,4 @@
-## Startin app
+## Starting app
 
 Use docker compose to start production app. 
 
