@@ -20,7 +20,7 @@ services:
       dockerfile: ./Dockerfile
     image: next-15-drizzle
     ports:
-      - "3003:3000"
+      - "3000:3000"
 
 volumes:
   nextjs-task-db-data:
