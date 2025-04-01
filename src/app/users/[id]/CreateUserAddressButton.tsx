@@ -24,4 +24,3 @@ export const CreateUserAddressButton: React.FC<Props> = ({ userId }) => {
     </>
   );
 };
-

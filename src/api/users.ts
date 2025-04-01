@@ -24,7 +24,7 @@ export const getAllUsers = async ({
     .from(usersTable)
     .orderBy(asc(usersTable.id))
     .limit(pageSize)
-    .offset((safePage - 1) * pageSize)
+    .offset((safePage - 1) * pageSize);
 
   return {
     data,
@@ -35,7 +35,7 @@ export const getAllUsers = async ({
 };
 
 export const getUserById = async (
-  id: SelectUser["id"]
+  id: SelectUser["id"],
 ): Promise<SelectUser> => {
   const user: SelectUser | null = await db
     .select()

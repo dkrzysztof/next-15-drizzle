@@ -10,7 +10,7 @@ export type Props = {
 };
 
 export const UserContextMenu: React.FC<Props> = ({ user }) => {
-  const message = App.useApp().message
+  const message = App.useApp().message;
   return (
     <Dropdown
       trigger={["contextMenu", "click"]}
@@ -23,7 +23,7 @@ export const UserContextMenu: React.FC<Props> = ({ user }) => {
             onClick: (event) => {
               event.domEvent.stopPropagation();
               message.info(
-                `Successfully edited user: ${formatFullname(user)}!`
+                `Successfully edited user: ${formatFullname(user)}!`,
               );
             },
           },
@@ -35,7 +35,7 @@ export const UserContextMenu: React.FC<Props> = ({ user }) => {
             onClick: (event) => {
               event.domEvent.stopPropagation();
               message.info(
-                `Successfully deleted user: ${formatFullname(user)}!`
+                `Successfully deleted user: ${formatFullname(user)}!`,
               );
             },
           },

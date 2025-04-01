@@ -11,7 +11,7 @@ export const LiveFormUsersAddressPreview: React.FC<Props> = ({ form }) => {
   const formValues =
     Form.useWatch<UserAddressFormValues, UserAddressFormValues>(
       (values) => values,
-      form
+      form,
     ) ?? null;
 
   return (

@@ -3,11 +3,11 @@ import { SelectUserAddress } from "@/db/schema";
 export type Pagination = {
   page: number;
   pageSize: number;
-}
+};
 
 export type PaginationResponse = Pagination & {
-  total: number
-}
+  total: number;
+};
 
 export type UserAddress = SelectUserAddress & {
   createdAt: string;
@@ -20,13 +20,13 @@ export type UserAddress = SelectUserAddress & {
   countryCode: string;
   street: string;
   buildingNumber: string;
-}
+};
 
 export type ServerActionResult = {
   isSuccess: boolean;
   message: string;
-}
+};
 
 export type Paginated<T> = PaginationResponse & {
-  data: T[]
-}
+  data: T[];
+};

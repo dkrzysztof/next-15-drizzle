@@ -3,7 +3,7 @@ import { Button, App } from "antd";
 import React from "react";
 
 export const AddUserButton: React.FC = () => {
-  const message = App.useApp().message
+  const message = App.useApp().message;
   return (
     <Button
       className="ml-auto"

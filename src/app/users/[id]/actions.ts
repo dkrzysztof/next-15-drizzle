@@ -12,7 +12,7 @@ import { userAddressFormValuesToAddUserAddressType } from "@/utils";
 
 export async function handleAddUserAddress(
   _: unknown,
-  formValues: Required<UserAddressExportedFormValues>
+  formValues: Required<UserAddressExportedFormValues>,
 ): Promise<ServerActionResult> {
   const data = userAddressFormValuesToAddUserAddressType(formValues);
   return addUserAddressToUser(data);
@@ -20,7 +20,7 @@ export async function handleAddUserAddress(
 
 export async function handleEditUserAddress(
   _: unknown,
-  formValues: Required<UserAddressExportedFormValues>
+  formValues: Required<UserAddressExportedFormValues>,
 ): Promise<ServerActionResult> {
   const data = userAddressFormValuesToAddUserAddressType(formValues);
   return editUserAddressToUser(data);
@@ -28,7 +28,7 @@ export async function handleEditUserAddress(
 
 export async function handleRemoveUserAddress(
   _: unknown,
-  formValues: UserAddressGroupedPrimaryKey
+  formValues: UserAddressGroupedPrimaryKey,
 ): Promise<ServerActionResult> {
   return removeUserAddress(formValues);
 }

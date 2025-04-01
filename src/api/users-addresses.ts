@@ -21,7 +21,7 @@ export type AddUserAddressType = {
 };
 
 export const addUserAddressToUser = async (
-  data: AddUserAddressType
+  data: AddUserAddressType,
 ): Promise<ServerActionResult> => {
   const userAddress = await getUserAddressByGroupedId({
     addressType: data.addressType,
@@ -56,8 +56,8 @@ export const getUserAddressByGroupedId = async ({
       and(
         eq(usersAddresses.userId, userId),
         eq(usersAddresses.addressType, addressType),
-        eq(usersAddresses.validFrom, validFrom)
-      )
+        eq(usersAddresses.validFrom, validFrom),
+      ),
     )
     .limit(1)
     .then(firstOrNull);
@@ -89,8 +89,8 @@ export const editUserAddressToUser = async ({
       and(
         eq(usersAddresses.userId, userId),
         eq(usersAddresses.addressType, addressType),
-        eq(usersAddresses.validFrom, validFrom)
-      )
+        eq(usersAddresses.validFrom, validFrom),
+      ),
     );
 
   return {
@@ -101,7 +101,7 @@ export const editUserAddressToUser = async ({
 
 export const getUsersAddressesByUserId = async (
   userId: SelectUser["id"],
-  { page, pageSize }: Pagination
+  { page, pageSize }: Pagination,
 ): Promise<Paginated<SelectUserAddress>> => {
   const { total } = (await db
     .select({
@@ -122,7 +122,7 @@ export const getUsersAddressesByUserId = async (
       usersAddresses.countryCode,
       usersAddresses.city,
       usersAddresses.street,
-      usersAddresses.buildingNumber
+      usersAddresses.buildingNumber,
     )
     .where(eq(usersAddresses.userId, userId))
     .offset((safePage - 1) * pageSize)
@@ -160,8 +160,8 @@ export const removeUserAddress = async ({
       and(
         eq(usersAddresses.userId, userId),
         eq(usersAddresses.addressType, addressType),
-        eq(usersAddresses.validFrom, validFrom)
-      )
+        eq(usersAddresses.validFrom, validFrom),
+      ),
     );
 
   return {

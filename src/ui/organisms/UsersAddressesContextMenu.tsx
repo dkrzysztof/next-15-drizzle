@@ -44,5 +44,3 @@ export const UsersAddressesContextMenu: React.FC<Props> = ({
     </Dropdown>
   );
 };
-
-

@@ -16,9 +16,8 @@ type SearchPageProps = {
 export default async function UsersPage({ searchParams }: SearchPageProps) {
   const paginationRequest = paginationOrDefault(await searchParams);
 
-  const { data: users, ...paginationResponse } = await getAllUsers(
-    paginationRequest
-  );
+  const { data: users, ...paginationResponse } =
+    await getAllUsers(paginationRequest);
 
   return (
     <>
@@ -35,10 +34,7 @@ export default async function UsersPage({ searchParams }: SearchPageProps) {
         <Row className="w-full mb-3">
           <AddUserButton />
         </Row>
-        <UsersTable
-          dataSource={users}
-          pagination={paginationResponse}
-        />
+        <UsersTable dataSource={users} pagination={paginationResponse} />
       </Suspense>
     </>
   );

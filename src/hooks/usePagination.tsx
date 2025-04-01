@@ -9,7 +9,7 @@ type UsePagination = {
 };
 
 export const usePagination = (
-  pagination: PaginationResponse
+  pagination: PaginationResponse,
 ): UsePagination => {
   const searchParams = useSearchParams();
   const pathname = usePathname();

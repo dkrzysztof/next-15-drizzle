@@ -54,7 +54,7 @@ export const DeleteActionButton: React.FC<Props> = ({ usersAddress }) => {
             addressType: usersAddress.addressType,
             userId: usersAddress.userId,
             validFrom: usersAddress.validFrom,
-          })
+          }),
         );
         return new Promise<void>((resolve, reject) => {
           resolved.current = resolve;

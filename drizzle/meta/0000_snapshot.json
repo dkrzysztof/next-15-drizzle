@@ -65,9 +65,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "users_email_key": {
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "nullsNotDistinct": false,
           "name": "users_email_key"
         }
@@ -155,12 +153,8 @@
           "tableFrom": "users_addresses",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -168,11 +162,7 @@
       "compositePrimaryKeys": {
         "users_addresses_pkey": {
           "name": "users_addresses_pkey",
-          "columns": [
-            "user_id",
-            "address_type",
-            "valid_from"
-          ]
+          "columns": ["user_id", "address_type", "valid_from"]
         }
       },
       "uniqueConstraints": {},

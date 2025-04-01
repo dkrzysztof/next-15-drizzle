@@ -4,7 +4,7 @@ import { useActionState, useEffect } from "react";
 type UseEventActionStateOptions<Payload> = {
   serverAction: (
     state: Awaited<ServerActionResult | null>,
-    payload: Payload
+    payload: Payload,
   ) => Promise<ServerActionResult | null>;
   onSuccess?: (result: ServerActionResult) => void;
   onError?: (result: ServerActionResult) => void;
@@ -17,7 +17,7 @@ export const useEventActionState = <Payload>({
 }: UseEventActionStateOptions<Payload>): [
   state: Awaited<ServerActionResult | null>,
   dispatch: (payload: Payload) => void,
-  isPending: boolean
+  isPending: boolean,
 ] => {
   const [result, formAction, pending] = useActionState<
     ServerActionResult | null,
@@ -26,10 +26,10 @@ export const useEventActionState = <Payload>({
 
   useEffect(() => {
     if (result) {
-      if (result.isSuccess ) {
-        if(onSuccess) onSuccess(result);
+      if (result.isSuccess) {
+        if (onSuccess) onSuccess(result);
       } else {
-        if(onError) onError(result);
+        if (onError) onError(result);
       }
     }
   }, [result]);

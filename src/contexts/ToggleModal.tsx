@@ -9,7 +9,7 @@ const ToggleModal = createContext<ToggleModalValue<any>>({
   updateEntity: () => {},
 });
 
-export const useToggleModal = <T extends object,>(): ToggleModalValue<T> => {
+export const useToggleModal = <T extends object>(): ToggleModalValue<T> => {
   const context = useContext(ToggleModal);
   if (!context) {
     throw new Error("ToggleModal was not found");
@@ -27,7 +27,7 @@ export const ToggleModalProvider: React.FC<{
   const open = useCallback((value: boolean) => setOpen(value), [setOpen]);
   const updateEntity = useCallback(
     (value: any | null) => setEntity(value),
-    [setEntity]
+    [setEntity],
   );
 
   return (

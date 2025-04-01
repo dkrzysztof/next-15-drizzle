@@ -26,7 +26,10 @@ export const shouldBeNumber = (value: any): number => {
   return +value;
 };
 
-export const numberOrDefault = (value: string | number | undefined, defaultValue: number): number => {
+export const numberOrDefault = (
+  value: string | number | undefined,
+  defaultValue: number,
+): number => {
   if (value === undefined || Number.isNaN(+value)) {
     return defaultValue;
   }
@@ -35,7 +38,7 @@ export const numberOrDefault = (value: string | number | undefined, defaultValue
 };
 
 export const paginationOrDefault = (
-  pagination: Record<keyof Pagination, string | number | undefined>
+  pagination: Record<keyof Pagination, string | number | undefined>,
 ): Pagination => ({
   page: numberOrDefault(pagination.page, 1),
   pageSize: numberOrDefault(pagination.pageSize, 4),
@@ -54,7 +57,7 @@ export const formatLine = (...vars: (string | undefined)[]): string | null => {
 };
 
 export const formatUserAddressFormatValues = (
-  value: UserAddressExportedFormValues
+  value: UserAddressExportedFormValues,
 ): string[] | null => {
   const multilineString: string[] = [
     formatLine(value.street, value.buildingNumber),
@@ -66,13 +69,13 @@ export const formatUserAddressFormatValues = (
 };
 
 export const userAddressPrimaryKeyToString = (
-  userAddress: SelectUserAddress
+  userAddress: SelectUserAddress,
 ): string => {
   return `${userAddress.userId}-${userAddress.addressType}-${userAddress.validFrom}`;
 };
 
 export const userAddressFormValuesToAddUserAddressType = (
-  formValues: Required<UserAddressExportedFormValues>
+  formValues: Required<UserAddressExportedFormValues>,
 ): AddUserAddressType => {
   return {
     userId: formValues.userId,
@@ -87,7 +90,7 @@ export const userAddressFormValuesToAddUserAddressType = (
 };
 
 export const selectUsersAddressToUserAddressFormValues = (
-  value: SelectUserAddress
+  value: SelectUserAddress,
 ): UserAddressFormValues => ({
   addressType: value.addressType,
   buildingNumber: value.buildingNumber,
@@ -111,7 +114,7 @@ export const userAddressFormValuesToUserAddressExportedFormValues = ({
 
 export const validateIsCountryCodeIso3166_1Alpha3 = (
   _: unknown,
-  value: string
+  value: string,
 ): Promise<void> => {
   if (!value || countries.isValid(value.toUpperCase())) {
     return Promise.resolve();
