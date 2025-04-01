@@ -34,7 +34,7 @@ export const numberOrDefault = (
     return defaultValue;
   }
 
-  return +value;
+  return +value > 0 ? +value : defaultValue;
 };
 
 export const paginationOrDefault = (
